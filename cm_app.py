@@ -7,7 +7,7 @@ openai.api_key = "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"
 # Function to generate response from OpenAI API
 def generate_response(prompt):
     response = openai.Completion.create(
-        engine="text-davinci-002",
+        engine="davinci",
         prompt=prompt,
         max_tokens=50
     )
@@ -59,6 +59,10 @@ if st.button("Get Chatbot Response"):
         prompt = "I would like to get information about all change management assessments."
     else:
         prompt = f"I would like to get information about {selected_assessment}."
+
+    bot_response = generate_response(prompt)
+    st.write("Chatbot Response:")
+    st.write(bot_response)
 
     bot_response = generate_response(prompt)
     st.write("Chatbot Response:")
