@@ -5,7 +5,7 @@ import streamlit as st
 st.set_page_config(page_title="GPT Chatbot", page_icon=":robot_face:")
 
 # Load your OpenAI API key from an environment variable or direct input
-openai_api_key = "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"  # Replace with your OpenAI API key
+openai_api_key = st.secrets["OPENAI_API_KEY"] # Replace with your OpenAI API key
 
 # Initialize the OpenAI client with your API key
 openai.api_key = openai_api_key
