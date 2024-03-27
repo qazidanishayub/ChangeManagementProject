@@ -1,9 +1,22 @@
 import streamlit as st
+import openai
 
-# Step 1: Create a Streamlit application
+# Set up OpenAI API key
+openai.api_key = "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"
+
+# Function to generate response from OpenAI API
+def generate_response(prompt):
+    response = openai.Completion.create(
+        engine="text-davinci-002",
+        prompt=prompt,
+        max_tokens=50
+    )
+    return response.choices[0].text.strip()
+
+# Streamlit application
 st.title("Change Management Assessment Tool")
 
-# Step 2: Design the user interface with sign-up and dropdown options
+# Sign-up form
 with st.form("signup_form"):
     st.write("Sign up")
     username = st.text_input("Username")
@@ -13,6 +26,7 @@ with st.form("signup_form"):
 if submit_button:
     st.success("Successfully signed up as {}".format(username))
 
+# List of assessments
 assessments = [
     "Change vision/case for change",
     "Change approach/strategy",
@@ -36,17 +50,16 @@ assessments = [
     "Communications messages"
 ]
 
-# Step 2 (continued): Display dropdown options
+# Dropdown menu for assessment selection
 selected_assessment = st.selectbox("Select Assessment", assessments, index=0)
 
+# Chatbot response based on selected assessment
+if st.button("Get Chatbot Response"):
+    if selected_assessment == "All":
+        prompt = "I would like to get information about all change management assessments."
+    else:
+        prompt = f"I would like to get information about {selected_assessment}."
 
-# Step 3: Add 'All' option and allow users to choose multiple assessments
-if selected_assessment == "All":
-    selected_assessments = assessments
-else:
-    selected_assessments = [selected_assessment]
-
-# Step 4: Display selected assessments
-st.write("Selected Assessments:")
-for assessment in selected_assessments:
-    st.write("- " + assessment)
+    bot_response = generate_response(prompt)
+    st.write("Chatbot Response:")
+    st.write(bot_response)
