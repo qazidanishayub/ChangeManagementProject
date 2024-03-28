@@ -1,52 +1,65 @@
-import openai
 import streamlit as st
+import openai
 
-# Streamlit page configuration
-st.set_page_config(page_title="GPT Chatbot", page_icon=":robot_face:")
+# Set up OpenAI API key
+openai.api_key = "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"
 
-# Load your OpenAI API key from an environment variable or direct input
-openai_api_key = st.secrets["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"] # Replace with your OpenAI API key
-
-# Initialize the OpenAI client with your API key
-openai.api_key = openai_api_key
-
-# Define a function to get a response from OpenAI's completion engine
-def get_openai_response(prompt):
+# Function to generate response from OpenAI API
+def generate_response(prompt):
     response = openai.Completion.create(
-        engine="davinci",  # You can use other engines as per your requirement
+        engine="davinci",
         prompt=prompt,
-        max_tokens=150,
-        n=1,
-        stop=None,
-        temperature=0.9
+        max_tokens=50
     )
     return response.choices[0].text.strip()
 
-# Streamlit UI layout
-st.title("GPT Chatbot")
-st.write("Ask me anything!")
+# Streamlit application
+st.title("Change Management Assessment Tool")
 
-# Chat history is stored in a session state to persist across reruns
-if 'history' not in st.session_state:
-    st.session_state['history'] = []
+# Sign-up form
+with st.form("signup_form"):
+    st.write("Sign up")
+    username = st.text_input("Username")
+    password = st.text_input("Password", type="password")
+    submit_button = st.form_submit_button("Sign Up")
 
-# User input text box
-user_input = st.text_input("Your message:", key="input")
+if submit_button:
+    st.success("Successfully signed up as {}".format(username))
 
-# When the user sends a message, append it to the history and get a response
-if st.button("Send") and user_input:
-    # Append user input to history
-    st.session_state['history'].append({"sender": "You", "message": user_input})
-    # Get a response from GPT-3
-    response = get_openai_response(user_input)
-    # Append bot response to history
-    st.session_state['history'].append({"sender": "Bot", "message": response})
-    # Clear the text input
-    st.session_state['input'] = ""
+# List of assessments
+assessments = [
+    "Change vision/case for change",
+    "Change approach/strategy",
+    "Change impact assessment",
+    "Stakeholder assessment/map",
+    "ADKAR assessment",
+    "Training assessment",
+    "Communications plan",
+    "Engagement plan",
+    "Training plan",
+    "Key messages by stakeholder group",
+    "Briefing messages",
+    "Benefits/Adoption KPIs",
+    "What’s changing and what is not summary",
+    "Champions survey",
+    "Users survey",
+    "Training feedback survey",
+    "Readiness assessment",
+    "Health check",
+    "Change KPIs/user adoption statistics",
+    "Communications messages"
+]
 
-# Display chat history
-for chat in st.session_state['history']:
-    if chat['sender'] == "You":
-        st.text_area("", value=chat['message'], height=50, key=str(chat)+'_you')
+# Dropdown menu for assessment selection
+selected_assessment = st.selectbox("Select Assessment", assessments, index=0)
+
+# Chatbot response based on selected assessment
+if st.button("Get Chatbot Response"):
+    if selected_assessment == "All":
+        prompt = "I would like to get information about all change management assessments."
     else:
-        st.text_area("", value=chat['message'], height=50, key=str(chat)+'_bot', disabled=True)
+        prompt = f"I would like to get information about {selected_assessment}."
+
+    bot_response = generate_response(prompt)
+    st.write("Chatbot Response:")
+    st.write(bot_response)
