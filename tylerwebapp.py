@@ -128,4 +128,30 @@ def main():
     st.write("### Example Portfolio:")
     st.write("Year:", year)
     st.write("Strategy:", strategy)
-    st.write("Portfolio
+    st.write("Portfolio Composition:")
+    for asset, weight in portfolio.items():
+        st.write(f"- {asset}: {weight}%")
+
+    # Cryptocurrency selection
+    selected_coin = st.selectbox("Select Coin", ["Bitcoin", "Ethereum", "Solana", "Ripple", "Cardano", "Polkadot", "Litecoin", "Chainlink", "Stellar", "Tezos", "VeChain", "Theta Token", "Monero", "EOS", "Trading View", "DummyCoin"])
+
+    # Display cryptocurrency details
+    st.write("### Cryptocurrency Details:")
+    crypto_data = get_crypto_data()
+    if selected_coin in crypto_data:
+        details = crypto_data[selected_coin]
+        st.write(f"#### {details['name']} ({details['symbol']})")
+        st.write(f"Current Price: ${details['current_price']}")
+        st.write(f"Market Cap: ${details['market_cap']}")
+        st.write(f"Total Volume: ${details['total_volume']}")
+        st.image(details['image'], use_column_width=True)
+
+    # Display trend graph
+    st.write("### Price Trend Graph:")
+    years_to_show = st.multiselect("Select Years to Show", list(range(2020, 2026)), default=[year])
+    trend_fig = create_dummy_trend_graph(selected_coin, years_to_show)
+    st.plotly_chart(trend_fig)
+
+# Run the main function
+if __name__ == "__main__":
+    main()
