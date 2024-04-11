@@ -146,6 +146,13 @@ def main():
         st.write(f"Total Volume: ${details['total_volume']}")
         st.image(details['image'], use_column_width=True)
 
+    # Compare two coins and ETF tokens
+    st.write("### Compare Coins and ETF Tokens:")
+    selected_coin1 = st.selectbox("Select Coin/ETF Token 1", list(crypto_data.keys()), index=0)
+    selected_coin2 = st.selectbox("Select Coin/ETF Token 2", list(crypto_data.keys()), index=1)
+    if selected_coin1 != selected_coin2:
+        st.write(f"Comparing {selected_coin1} and {selected_coin2}...")
+
     # Display trend graph
     st.write("### Price Trend Graph:")
     years_to_show = st.multiselect("Select Years to Show", list(range(2020, 2026)), default=[year])
