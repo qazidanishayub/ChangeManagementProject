@@ -4,7 +4,7 @@ import plotly.express as px
 import requests
 
 # Functions from previous steps
-def get_historical_data(crypto_id, days='max', currency='usd'):
+def get_historical_data(crypto_id, days=500, currency='usd'):
     url = f'https://api.coingecko.com/api/v3/coins/{crypto_id}/market_chart'
     params = {
         'vs_currency': currency,
