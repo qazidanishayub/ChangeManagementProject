@@ -48,7 +48,7 @@ def main():
     data = get_historical_data(crypto_id, days=days)
 
     # Process data
-    prices = pd.DataFrame(data['prices'], columns=['timestamp', 'price'])
+    prices = pd.DataFrame(data['price'], columns=['timestamp', 'price'])
     prices['date'] = pd.to_datetime(prices['timestamp'], unit='ms')
     prices = prices[(prices['date'] >= start_date) & (prices['date'] <= end_date)]
 
