@@ -46,11 +46,15 @@ def main():
     # Fetch historical data within the selected date range
     days = (end_date - start_date).days
     data = get_historical_data(crypto_id, days=days)
-    data = get_historical_data(crypto_id, days=days)
     print(data)  # Add this line to log the complete API response
 
     # Process data
-    prices = pd.DataFrame(data['price'], columns=['timestamp', 'price'])
+    if 'prices' in data:
+        prices = pd.DataFrame(data['prices'], columns=['timestamp', 'price'])
+    else:
+        st.error('No price data available. Please check the selected cryptocurrency or date range.')
+        return
+
     prices['date'] = pd.to_datetime(prices['timestamp'], unit='ms')
     prices = prices[(prices['date'] >= start_date) & (prices['date'] <= end_date)]
 
