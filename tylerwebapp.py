@@ -4,8 +4,8 @@ import plotly.graph_objs as go
 
 # Function to fetch cryptocurrency data from CoinGecko API
 def get_crypto_data():
-    # Fetching data for Bitcoin, Ethereum, Solana, and another dummy coin
-    coins = ["bitcoin", "ethereum", "solana", "dummycoin"]
+    # Fetching data for Bitcoin, Ethereum, Solana, and other coins
+    coins = ["bitcoin", "ethereum", "solana", "ripple", "cardano", "polkadot", "litecoin", "chainlink", "stellar", "tezos", "vechain", "theta-token", "monero", "eos", "trading-view", "dummycoin"]
     data = {}
     for coin in coins:
         response = requests.get(f"https://api.coingecko.com/api/v3/coins/{coin}")
@@ -26,35 +26,71 @@ def generate_portfolio(strategy, year):
     # Dummy portfolio generation based on strategy and year
     if strategy == "Fully Weighted by Market Cap":
         portfolio = {
-            "Bitcoin": 25,
-            "Ethereum": 25,
-            "Solana": 25,
-            "DummyCoin": 25
+            "Bitcoin": 15,
+            "Ethereum": 15,
+            "Solana": 10,
+            "Ripple": 10,
+            "Cardano": 10,
+            "Polkadot": 5,
+            "Litecoin": 5,
+            "Chainlink": 5,
+            "Stellar": 5,
+            "Tezos": 5,
+            "VeChain": 5,
+            "Theta Token": 5,
+            "Monero": 5,
+            "EOS": 5,
+            "Trading View": 5,
+            "DummyCoin": 5
         }
     elif strategy == "Weighted by Market Cap with Cap":
         portfolio = {
-            "Bitcoin": 30,
-            "Ethereum": 30,
-            "Solana": 20,
-            "DummyCoin": 20
+            "Bitcoin": 20,
+            "Ethereum": 20,
+            "Solana": 15,
+            "Ripple": 15,
+            "Cardano": 10,
+            "Polkadot": 5,
+            "Litecoin": 5,
+            "Chainlink": 5,
+            "Stellar": 5,
+            "Tezos": 5,
+            "VeChain": 5,
+            "Theta Token": 5,
+            "Monero": 5,
+            "EOS": 5,
+            "Trading View": 5,
+            "DummyCoin": 5
         }
     else:  # "Top 15 Cryptos by Volume"
         portfolio = {
-            "Bitcoin": 20,
-            "Ethereum": 20,
-            "Solana": 30,
-            "DummyCoin": 30
+            "Bitcoin": 10,
+            "Ethereum": 10,
+            "Solana": 10,
+            "Ripple": 10,
+            "Cardano": 10,
+            "Polkadot": 5,
+            "Litecoin": 5,
+            "Chainlink": 5,
+            "Stellar": 5,
+            "Tezos": 5,
+            "VeChain": 5,
+            "Theta Token": 5,
+            "Monero": 5,
+            "EOS": 5,
+            "Trading View": 5,
+            "DummyCoin": 5
         }
     return portfolio
 
 # Function to create a dummy trend graph
-def create_dummy_trend_graph():
-    x_values = [1, 2, 3, 4, 5]
-    y_values = [100, 120, 90, 110, 130]
-
+def create_dummy_trend_graph(coin, years):
     fig = go.Figure()
-    fig.add_trace(go.Scatter(x=x_values, y=y_values, mode='lines', name='Dummy Trend'))
-    fig.update_layout(title='Dummy Coin Price Trend', xaxis_title='Time', yaxis_title='Price (USD)')
+    for year in years:
+        x_values = list(range(1, 13))  # Assuming 12 months in a year
+        y_values = [100 + i * 10 for i in range(12)]  # Dummy price data
+        fig.add_trace(go.Scatter(x=x_values, y=y_values, mode='lines', name=f"{coin} ({year})"))
+    fig.update_layout(title=f"{coin} Price Trend", xaxis_title='Time', yaxis_title='Price (USD)')
     return fig
 
 # Main function to run the web application
@@ -77,7 +113,7 @@ def main():
 
     # Header with title and description
     st.title("Crypto Portfolio Simulator")
-    st.write("Welcome to the Crypto Portfolio Simulator. Select a portfolio strategy and year to see an example portfolio.")
+    st.write("Welcome to the Crypto Portfolio Simulator. Select a portfolio strategy, year, and coin to see an example portfolio and trend graph.")
 
     # Portfolio strategy selection
     strategy = st.selectbox("Select Portfolio Strategy", ["Fully Weighted by Market Cap", "Weighted by Market Cap with Cap", "Top 15 Cryptos by Volume"])
@@ -92,25 +128,4 @@ def main():
     st.write("### Example Portfolio:")
     st.write("Year:", year)
     st.write("Strategy:", strategy)
-    st.write("Portfolio Composition:")
-    for asset, weight in portfolio.items():
-        st.write(f"- {asset}: {weight}%")
-
-    # Display cryptocurrency details
-    st.write("### Cryptocurrency Details:")
-    crypto_data = get_crypto_data()
-    for coin, details in crypto_data.items():
-        st.write(f"#### {details['name']} ({details['symbol']})")
-        st.write(f"Current Price: ${details['current_price']}")
-        st.write(f"Market Cap: ${details['market_cap']}")
-        st.write(f"Total Volume: ${details['total_volume']}")
-        st.image(details['image'], use_column_width=True)
-
-    # Display a dummy trend graph
-    st.write("### Dummy Trend Graph:")
-    dummy_trend_fig = create_dummy_trend_graph()
-    st.plotly_chart(dummy_trend_fig)
-
-# Run the main function
-if __name__ == "__main__":
-    main()
+    st.write("Portfolio
