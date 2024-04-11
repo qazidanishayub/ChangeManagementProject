@@ -14,7 +14,7 @@ def get_historical_data(crypto_id, days=500, currency='usd'):
     data = response.json()
     return data
 
-def get_top_cryptos(limit=20):
+def get_top_cryptos(limit=200):
     url = "https://api.coingecko.com/api/v3/coins/markets"
     params = {
         'vs_currency': 'usd',
