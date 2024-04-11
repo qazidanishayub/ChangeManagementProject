@@ -39,7 +39,7 @@ def main():
     strategy = st.sidebar.selectbox('Select Strategy', ['Market Cap Weighted', 'Capped at X%', 'Top 15 by Volume'])
     days = st.sidebar.slider('Select Time Frame (Days)', 30, 365, step=30)
 
-    data = get_historical_data(crypto_id, days=days)
+    data = get_historical_data(crypto_id, days=int(days))
     prices = pd.DataFrame(data['prices'], columns=['timestamp', 'price'])
     prices['date'] = pd.to_datetime(prices['timestamp'], unit='ms')
     prices['price'] = prices['price'].astype(float)
