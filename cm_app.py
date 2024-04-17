@@ -47,7 +47,8 @@ assessments = [
     "Readiness assessment",
     "Health check",
     "Change KPIs/user adoption statistics",
-    "Communications messages"
+    "Communications messages",
+    "FAQs"
 ]
 
 # Dropdown menu for assessment selection
