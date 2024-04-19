@@ -49,7 +49,7 @@ questions_dict = {
         "Who will be affected by this change?",
         "What are the potential risks?",
         "How will we mitigate these risks?"
-    ],
+    ]
     # Add other categories as per your document
 }
 
