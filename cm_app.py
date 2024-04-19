@@ -1,8 +1,10 @@
 import streamlit as st
 import openai
+from secrets import OPENAI_API_KEY
 
 # Set up OpenAI API key
-openai.api_key = "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"
+openai.api_key = OPENAI_API_KEY
+
 
 # Function to generate response from OpenAI API
 def generate_response(prompt):
