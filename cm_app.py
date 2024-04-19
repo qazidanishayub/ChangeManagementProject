@@ -1,8 +1,8 @@
 import streamlit as st
-from openai import OpenAI
+import openai
 
 OpenAI_key = st.secrets.openai_api_key
-client = OpenAI(api_key=OpenAI_key)
+client = openai(api_key=OpenAI_key)
 
 def generate_response(prompt):
 
