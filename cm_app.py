@@ -29,6 +29,30 @@ st.markdown(
     """, unsafe_allow_html=True
 )
 
+# List of assessments
+assessments = [
+    "Change vision/case for change",
+    "Change approach/strategy",
+    "Change impact assessment",
+    "Stakeholder assessment/map",
+    "ADKAR assessment",
+    "Training assessment",
+    "Communications plan",
+    "Engagement plan",
+    "Training plan",
+    "Key messages by stakeholder group",
+    "Briefing messages",
+    "Benefits/Adoption KPIs",
+    "What’s changing and what is not summary",
+    "Champions survey",
+    "Users survey",
+    "Training feedback survey",
+    "Readiness assessment",
+    "Health check",
+    "Change KPIs/user adoption statistics",
+    "Communications messages",
+    "FAQs"
+]
 # Title and Sidebar Setup
 st.title("Change Management Assessment Tool")
 selected_assessments = st.sidebar.multiselect("Select Assessments", assessments, default=None)
