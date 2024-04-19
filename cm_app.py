@@ -1,19 +1,21 @@
 import streamlit as st
-import openai
+from openai import OpenAI
 
-# Set up OpenAI API key
-openai.api_key = st.secrets.openai_api_key
+OpenAI_key = st.secrets.openai_api_key
+client = OpenAI(api_key=OpenAI_key)
 
+def query_refiner(prompt):
 
-# Function to generate response from OpenAI API
-def generate_response(prompt):
-    response = openai.Completion.create(
-        engine="davinci",
-        prompt=prompt,
-        max_tokens=50
+    response = client.chat.completions.create(
+    model="gpt-3.5-turbo-16k",
+    messages=[
+       {"role": "system", "content": prompt},
+    ],
+    temperature=0.2,
+    max_tokens=256,
+    top_p=1,
     )
-    return response.choices[0].text.strip()
-
+    return response.choices[0].message
 # Streamlit application
 st.title("Change Management Assessment Tool")
 
