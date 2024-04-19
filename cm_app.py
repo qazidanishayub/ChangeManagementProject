@@ -3,7 +3,7 @@ import openai
 from secrets import OPENAI_API_KEY
 
 # Set up OpenAI API key
-openai.api_key = OPENAI_API_KEY
+openai.api_key = st.secrets.openai_api_key
 
 
 # Function to generate response from OpenAI API
