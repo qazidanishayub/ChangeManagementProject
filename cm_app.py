@@ -1,5 +1,23 @@
 import streamlit as st
 from openai import OpenAI
+# Add to the top of your Streamlit script
+st.set_page_config(layout="wide", page_icon=":shark:", page_title="Change Management Tool", menu_items={
+    'Get Help': 'https://www.streamlit.io',
+    'Report a bug': "https://github.com",
+    'About': "# This is a header. This is an *extremely* cool app!"
+})
+
+# Set theme configuration in .streamlit/config.toml or directly in the script
+st.markdown(
+    """
+    <style>
+    .stApp {
+        background-color: #202123;
+        color: #fff;
+    }
+    </style>
+    """, unsafe_allow_html=True
+)
 
 # Initialize API client with secure key management
 OpenAI_key = st.secrets.openai_api_key
