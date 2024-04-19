@@ -24,7 +24,10 @@ with st.form("signup_form"):
     submit_button = st.form_submit_button("Sign Up")
 
 if submit_button:
-    st.success("Successfully signed up as {}".format(username))
+    if username == "admin" and password == "123":
+        st.success("Successfully signed up as {}".format(username))
+    else:
+        st.error("Invalid username or password. Please try again.")
 
 # List of assessments
 assessments = [
