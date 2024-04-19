@@ -4,16 +4,16 @@ from openai import OpenAI
 OpenAI_key = st.secrets.openai_api_key
 client = OpenAI(api_key=OpenAI_key)
 
-def query_refiner(prompt):
+def generate_response(prompt):
 
     response = client.chat.completions.create(
     model="gpt-3.5-turbo-16k",
     messages=[
        {"role": "system", "content": prompt},
-    ],
-    temperature=0.2,
-    max_tokens=256,
-    top_p=1,
+    ]
+    # temperature=0.2,
+    # max_tokens=256,
+    # top_p=1,
     )
     return response.choices[0].message
 # Streamlit application
