@@ -1,5 +1,18 @@
 import streamlit as st
 from openai import OpenAI
+st.markdown(
+    """
+    <style>
+    .stTextInput, .stButton>button {
+        width: 100%;
+    }
+    .stTextArea {
+        background-color: #333;
+        color: #ddd;
+    }
+    </style>
+    """, unsafe_allow_html=True
+)
 
 # Initialize API client with secure key management
 OpenAI_key = st.secrets.openai_api_key
