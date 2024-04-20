@@ -30,24 +30,7 @@ assessments = [
     "Change KPIs/user adoption statistics", "Communications messages", "FAQs"
 ]
 selected_assessments = st.sidebar.multiselect("Select Assessments", assessments, default=None)
-questions_dict = {
-    "Change vision/case for change": [
-        "What is the primary purpose of the change?",
-        "How does this change align with the organization's goals?",
-        "What specific outcomes do we aim to achieve with this change?"
-    ],
-    "Change approach/strategy": [
-        "What are the key components of our change strategy?",
-        "How will we communicate the change to stakeholders?",
-        "What are the risks associated with this strategy?"
-    ],
-    "Change impact assessment": [
-        "Who will be affected by this change?",
-        "What are the potential risks?",
-        "How will we mitigate these risks?"
-    ]
-    # Add other categories as per your document
-}
+
 # Assessment Dashboard Features
 if st.sidebar.button("Create/Update Dashboard"):
     st.session_state['dashboard'] = selected_assessments
@@ -59,27 +42,6 @@ if 'dashboard' in st.session_state:
     for item in st.session_state['dashboard']:
         st.write(f"- {item}")
 
-# Handling chatbot conversation
-if 'conversation' not in st.session_state:
-    st.session_state['conversation'] = []
-
-# Assessment Interactions
-for assessment in selected_assessments:
-    st.header(f"{assessment} Assessment")
-    questions = questions_dict.get(assessment, [])
-    for question in questions:
-        response_key = f"{assessment}: {question}"
-        user_response = st.text_input(question, key=response_key)
-        if st.button('Submit Response', key=response_key):
-            bot_response = generate_response(user_response)
-            st.session_state['conversation'].append({"question": question, "answer": bot_response})
-            st.text_area("Bot Response", value=bot_response, height=100, key=f"response_{response_key}")
-
-# Displaying the full conversation history if needed
-if st.checkbox('Show full conversation history'):
-    for exchange in st.session_state['conversation']:
-        st.text_area("Question", exchange['question'], height=75)
-        st.text_area("Answer", exchange['answer'], height=150)
 # Chatbot Interaction Based on Assessment
 if st.button("Get Chatbot Response"):
     if not selected_assessments:
