@@ -26,6 +26,15 @@ def evaluate_visual(test_files):
         user_input = st.text_input(f"Evaluation for Test {idx + 1}", "")
         st.write(f"Your evaluation: {user_input}")
 
+# Function to evaluate Both Tests
+def evaluate_both(listening_files, visual_files):
+    st.header("Both Tests")
+    for idx, (listening_file, visual_file) in enumerate(zip(listening_files, visual_files)):
+        st.subheader(f"Test {idx + 1}")
+        st.audio(listening_file, format='audio/mp3', start_time=0)
+        st.video(visual_file, start_time=0)
+        st.write("Please provide your evaluation for both the Listening and Visual tests.")
+
 # Main function
 def main():
     st.title("Accessible Neuropsychological Assessment (ANA)")
@@ -36,10 +45,8 @@ def main():
         evaluate_listening(tests["Listening"])
     elif test_type == "Visual":
         evaluate_visual(tests["Visual"])
-    else:
-        st.header("Listening and Visual Test")
-        st.write("This section combines both listening and visual tests.")
-        st.write("Instructions for the combined test will be provided soon.")
+    elif test_type == "Both":
+        evaluate_both(tests["Listening"], tests["Visual"])
 
 if __name__ == "__main__":
     main()
