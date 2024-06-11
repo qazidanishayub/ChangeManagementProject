@@ -4,8 +4,8 @@ import random
 
 # Define the tests and their types
 tests = {
-    "Listening": ["file_example_MP3_700KB.mp3"] * 7,
-    "Visual": ["ForBiggerFun.mp4"] * 7,
+    "Listening": ["file_example_MP3_700KB.mp3"],
+    "Visual": ["ForBiggerFun.mp4"],
 }
 
 # Function to evaluate Listening Test
