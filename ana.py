@@ -30,14 +30,16 @@ def evaluate_visual(test_files):
 def main():
     st.title("Accessible Neuropsychological Assessment (ANA)")
     st.sidebar.title("Select a Test")
-    test_type = st.sidebar.radio("Choose the type of test:", ["Listening", "Visual", "Other"])
+    test_type = st.sidebar.radio("Choose the type of test:", ["Listening", "Visual", "Both"])
 
     if test_type == "Listening":
         evaluate_listening(tests["Listening"])
     elif test_type == "Visual":
         evaluate_visual(tests["Visual"])
     else:
-        st.write("Other tests are under development.")
+        st.header("Listening and Visual Test")
+        st.write("This section combines both listening and visual tests.")
+        st.write("Instructions for the combined test will be provided soon.")
 
 if __name__ == "__main__":
     main()
