@@ -380,43 +380,36 @@ with tab1:
         st.info("Select assessments from the sidebar to get started. "
                 "Use **Select All** for a full audit, or choose specific areas.")
     else:
-        chip_html = "".join([
-            f'<span style="display:inline-flex;align-items:center;'
-            f'background:rgba(28,111,255,0.14);border:1px solid rgba(28,111,255,0.3);'
-            f'color:#7ABCFF;border-radius:6px;padding:3px 9px;'
-            f'font-size:0.8rem;margin:2px;">{a}</span>'
-            for a in selected_assessments
-        ])
-        st.markdown(f"""
-        <div style="margin-bottom:1.25rem;">
-          <div class="cm-response-label">Selected assessments ({len(selected_assessments)})</div>
-          <div style="display:flex;flex-wrap:wrap;gap:2px;">{chip_html}</div>
-        </div>
-        """, unsafe_allow_html=True)
+        def sync_sidebar():
+            selected = st.session_state.dashboard_multiselect
+            for item in ALL_ASSESSMENTS:
+                st.session_state[f"cb_{item}"] = (item in selected)
 
-        col_gen, col_exp = st.columns([3, 1])
-        with col_gen:
-            generate_btn = st.button(
-                f"Generate {detail_level} Assessment  →",
-                use_container_width=True
-            )
-        with col_exp:
-            export_btn = st.button("Export Last", use_container_width=True)
+        st.markdown('<div class="cm-response-label" style="margin-bottom:0.2rem;">Selected Assessments</div>', unsafe_allow_html=True)
+        st.multiselect(
+            "Selected Assessments",
+            options=ALL_ASSESSMENTS,
+            default=selected_assessments,
+            key="dashboard_multiselect",
+            on_change=sync_sidebar,
+            label_visibility="collapsed"
+        )
+        
+        with st.expander("📝 Project Context (Optional)", expanded=True):
+            st.markdown("<div style='font-size:0.85rem;color:#9EB3D0;margin-bottom:0.5rem;'>Add context to generate a highly tailored assessment report.</div>", unsafe_allow_html=True)
+            col_c1, col_c2 = st.columns(2)
+            with col_c1:
+                company_name = st.text_input("Company Name", placeholder="e.g. Acme Corp")
+            with col_c2:
+                author_name = st.text_input("Author / Manager", placeholder="e.g. Jane Doe")
+            project_context = st.text_area("Project Context & Goals", placeholder="e.g. Moving from legacy CRM to Salesforce to improve sales tracking.")
 
-        if export_btn and st.session_state.history:
-            last = st.session_state.history[-1]
-            export_text = (
-                f"CHANGE MANAGEMENT ASSESSMENT REPORT\n"
-                f"Generated: {last['timestamp']}\n"
-                f"Detail Level: {last['level']}\n"
-                f"Areas: {', '.join(last['items'])}\n\n"
-                f"{'=' * 60}\n\n{last['response']}"
-            )
-            st.download_button(
-                "Download .txt", export_text,
-                file_name=f"cm_report_{datetime.now().strftime('%Y%m%d_%H%M')}.txt",
-                mime="text/plain", use_container_width=True
-            )
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        generate_btn = st.button(
+            f"Generate {detail_level} Assessment  →",
+            use_container_width=True
+        )
 
         level_instructions = {
             "Basic": (
@@ -435,15 +428,22 @@ with tab1:
         }
 
         if generate_btn:
+            context_str = ""
+            if company_name or author_name or project_context:
+                context_str = "\n\n### Project Context:\n"
+                if company_name: context_str += f"- **Company**: {company_name}\n"
+                if author_name: context_str += f"- **Author**: {author_name}\n"
+                if project_context: context_str += f"- **Goals**: {project_context}\n"
+
             prompt = (
                 f"You are a senior change management consultant. "
                 f"Generate a {detail_level} level change management assessment report "
-                f"for the following selected areas: {', '.join(selected_assessments)}.\n\n"
+                f"for the following selected areas: {', '.join(selected_assessments)}.{context_str}\n\n"
                 f"Instructions: {level_instructions[detail_level]}\n"
                 f"Format with clear section headings. Be practical, specific, and actionable."
             )
 
-            with st.spinner("Generating your assessment with Gemini 1.5 Flash..."):
+            with st.spinner("Generating your assessment with Our AI..."):
                 try:
                     response = model.generate_content(prompt)
                     result_text = response.text
@@ -461,23 +461,48 @@ with tab1:
                 "run_id": st.session_state.run_count,
             })
 
-            st.markdown(f"""
-            <div class="cm-response-card">
-              <div class="cm-response-label">
-                AI Assessment · {detail_level} · {len(selected_assessments)} areas
-              </div>
-              <div class="cm-response-body">{result_text}</div>
-            </div>
-            """, unsafe_allow_html=True)
-
-        elif st.session_state.history:
+        # Render Response and Downloads
+        if st.session_state.history:
             last = st.session_state.history[-1]
             st.markdown(f"""
             <div class="cm-response-card">
-              <div class="cm-response-label">Last response · {last['level']} · {last['timestamp']}</div>
+              <div class="cm-response-label">AI Assessment · {last['level']} · {last['timestamp']}</div>
               <div class="cm-response-body">{last['response']}</div>
             </div>
             """, unsafe_allow_html=True)
+            
+            st.markdown("<br>", unsafe_allow_html=True)
+            st.markdown('<div class="cm-response-label">Export Report</div>', unsafe_allow_html=True)
+            
+            export_text = (
+                f"CHANGE MANAGEMENT ASSESSMENT REPORT\n"
+                f"Generated: {last['timestamp']}\n"
+                f"Detail Level: {last['level']}\n"
+                f"Areas: {', '.join(last['items'])}\n\n"
+                f"{'=' * 60}\n\n{last['response']}"
+            )
+            
+            dl1, dl2, dl3 = st.columns(3)
+            with dl1:
+                st.download_button("Download TXT", export_text, file_name=f"cm_report.txt", mime="text/plain", use_container_width=True)
+            with dl2:
+                from docx import Document
+                import io
+                doc = Document()
+                doc.add_heading('Change Management Assessment', 0)
+                doc.add_paragraph(export_text)
+                bio = io.BytesIO()
+                doc.save(bio)
+                st.download_button("Download DOCX", bio.getvalue(), file_name=f"cm_report.docx", mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document", use_container_width=True)
+            with dl3:
+                from fpdf import FPDF
+                pdf = FPDF()
+                pdf.add_page()
+                pdf.set_font("Helvetica", size=10)
+                safe_text = export_text.encode('latin-1', 'replace').decode('latin-1')
+                pdf.multi_cell(0, 5, safe_text)
+                pdf_bytes = pdf.output()
+                st.download_button("Download PDF", bytes(pdf_bytes), file_name=f"cm_report.pdf", mime="application/pdf", use_container_width=True)
 
 # ══ TAB 2: DASHBOARD ═════════════════════════════════════════════════════════
 with tab2:
@@ -589,5 +614,5 @@ with tab4:
     st.markdown('<div class="cm-cat-header" style="margin-top:1.5rem;">Model</div>',
                 unsafe_allow_html=True)
     c1, c2 = st.columns(2)
-    c1.metric("Model", "Gemini Flash")
-    c2.metric("Provider", "Google AI")
+    c1.metric("Model", "AI")
+    c2.metric("Provider", "Custom AI")
