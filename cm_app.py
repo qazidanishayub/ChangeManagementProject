@@ -365,7 +365,7 @@ st.markdown("""
       <div class="cm-sub">AI-powered assessments for organisational transformation</div>
     </div>
   </div>
-  <div class="cm-badge"><div class="cm-dot"></div>Gemini Flash</div>
+  <div class="cm-badge"><div class="cm-dot"></div>Custom AI</div>
 </div>
 """, unsafe_allow_html=True)
 
